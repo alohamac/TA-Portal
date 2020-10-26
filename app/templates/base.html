@@ -1,0 +1,33 @@
+<html>
+
+<head>
+    <title>TA Portal</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
+</head>
+
+<body>
+    <div class="nav-container">
+        <table>
+            <tr>
+                {% if current_user.is_authenticated %}
+                <td><a href="/logout" class="button"> Logout </a></td>
+                <td>Hello, <span class="useritem">{{ current_user.name }}</span></td>
+                {% else %}
+                <td><a href="/login" class="button">Login</a></td>
+                {% endif %}
+            </tr>
+        </table>
+    </div>
+    <div>
+        {% with messages = get_flashed_messages() %}
+        {% if messages %}
+        {% for message in messages %}
+        <div class="flash-container">{{ message }}</div>
+        {% endfor %}
+        {% endif %}
+        {% endwith %}
+
+        {% block content %} {% endblock %}
+    </div>
+</body>
+</html>
