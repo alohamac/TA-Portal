@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+{% if user.is_professor %}
+    Hello Professor
+{% else %}
+    Hello Student
+{% endif %}
+{% endblock %}
