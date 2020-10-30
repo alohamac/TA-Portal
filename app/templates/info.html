@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <h1>Contact Information</h1>
+    {%if form%}
+    <form class = "form" action="" method="post">
+        {{ form.hidden_tag() }}
+        <div>
+            {{form.name.label}}<br>
+            {{form.name(placeholder=current_user.name)}}<br>
+            {% for error in form.name.errors %}
+            <span style="color: red;">[{{ error }}]</span><br>
+            {%endfor%}
+
+            {{form.phone.label(class_="formtitle")}}<br>
+            {{form.phone(class_="formtitle", placeholder = current_user.phone)}}<br>
+            {% for error in form.phone.errors %}
+            <span style="color: red;">[{{ error }}]</span><br>
+            {%endfor%}
+
+            {{form.wsuID.label}}<br>
+            {{form.wsuID(placeholder = current_user.wsuID)}}<br>
+            {% for error in form.wsuID.errors %}
+            <span style="color: red;">[{{ error }}]</span><br>
+            {%endfor%}
+
+            {%if current_user.is_professor == None %}
+                <h1>Additional information</h1>
+                <div>
+                    {{form.gpa.label}}<br>
+                    {{form.gpa(placeholder=current_user.gpa)}}<br>
+                    {% for error in form.gpa.errors %}
+                    <span style="color: red;">[{{ error }}]</span><br>
+                    {%endfor%}
+                    
+                    {{form.major.label}}<br>
+                    {{form.major(placeholder=current_user.major)}}<br>
+                    {% for error in form.major.errors %}
+                    <span style="color: red;">[{{ error }}]</span><br>
+                    {%endfor%}
+
+                    {{form.graduation.label}}<br>
+                    {{form.graduation(placeholder="mm/yyyy")}}<br>
+                    {% for error in form.graduation.errors %}
+                    <span style="color: red;">[{{ error }}]</span><br>
+                    {%endfor%}
+                    
+                </div>
+            {%endif%}
+        </div><br>
+        {{ form.submit(class="button") }}
+    </form>
+    {%endif%}
+
+{%endblock%}
