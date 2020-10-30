@@ -1,6 +1,6 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, SubmitField, SelectField, TextAreaField, PasswordField, BooleanField
-from wtforms.validators import  ValidationError, DataRequired, EqualTo, Length, Email, EqualTo
+from wtforms import StringField, SubmitField, SelectField, TextAreaField, PasswordField, BooleanField, IntegerField, DecimalField, DateField
+from wtforms.validators import  ValidationError, DataRequired, EqualTo, Length, Email, EqualTo, Optional
 from wtforms.widgets import ListWidget, CheckboxInput
 from wtforms.ext.sqlalchemy.fields import QuerySelectMultipleField
 
@@ -24,3 +24,15 @@ class LoginForm(FlaskForm):
     password = PasswordField('Password', validators=[DataRequired()])
     remember_me = BooleanField('Remember me')
     submit = SubmitField('Login')
+
+class InfoForm(FlaskForm):
+    firstName = StringField('First Name', validators=[Length(max=20)])
+    lastName = StringField('Last Name', validators=[Length(max=20)])
+    phone = IntegerField('Phone', validators=[Optional()])
+    wsuID = StringField('WSU ID',validators=[Length(max =8)])
+
+    #additional information (students only)
+    gpa = DecimalField('GPA',validators=[Optional()])
+    major = StringField('Major', validators=[Optional()])
+    graduation = DateField('Expected Graduation', format ='%m/%Y', validators=[Optional()])
+    submit = SubmitField('Save')

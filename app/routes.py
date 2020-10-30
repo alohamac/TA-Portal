@@ -3,7 +3,7 @@ from flask_login import current_user, login_user, logout_user, login_required
 
 from app import app, db
 from app.models import User
-from app.forms import LoginForm, RegisterForm
+from app.forms import LoginForm, RegisterForm, InfoForm
 
 @app.before_first_request
 def initDB(*args, **kwargs):
@@ -66,6 +66,31 @@ def login():
         return redirect(url_for('index'))
 
     return render_template('login.html', form=form)
+
+@app.route('/info/', methods=['GET', 'POST'])
+@login_required
+def info():
+    form = InfoForm()
+    print(form.graduation.data)
+    if form.validate_on_submit():
+        flash("Information Saved")
+        if form.firstName.data:
+            current_user.firstName = form.firstName.data
+        if form.lastName.data:
+            current_user.lastName = form.lastName.data
+        if form.phone.data:
+            current_user.phone = form.phone.data
+        if form.wsuID.data:
+            current_user.wsuID = form.wsuID.data
+        if form.gpa.data:
+            current_user.gpa = form.gpa.data
+        if form.major.data:
+            current_user.major = form.major.data
+        if form.graduation.data:
+            current_user.graduation = form.graduation.data
+        db.session.commit()
+        return redirect(url_for('info'))
+    return render_template('info.html', form = form)
 
 @app.route('/logout', methods=['GET'])
 def logout():
