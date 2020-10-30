@@ -14,8 +14,6 @@ class User(UserMixin, db.Model):
     password_hash = db.Column(db.String(128))
     is_professor = db.Column(db.Boolean())
 
-    firstName = db.Column(db.String(20))
-    lastName = db.Column(db.String(20))
     phone = db.Column(db.Integer)
     wsuID = db.Column(db.Integer)
 
@@ -31,13 +29,3 @@ class User(UserMixin, db.Model):
     
     def check_password(self, password):
         return check_password_hash(self.password_hash, password)
-
-
-""" class Info(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    firstName = db.Column(db.String(20))
-    lastName = db.Column(db.String(20))
-    phone = db.Column(db.Integer)
-    wsuID = db.Column(db.Integer)
-    def __repr__(self):
-        return '<Tag {}: {}>'.format(self.id, self.lastName) """

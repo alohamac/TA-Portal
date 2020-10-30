@@ -26,8 +26,7 @@ class LoginForm(FlaskForm):
     submit = SubmitField('Login')
 
 class InfoForm(FlaskForm):
-    firstName = StringField('First Name', validators=[Length(max=20)])
-    lastName = StringField('Last Name', validators=[Length(max=20)])
+    name = StringField('Name', validators=[Length(max=70)])
     phone = IntegerField('Phone', validators=[Optional()])
     wsuID = StringField('WSU ID',validators=[Length(max =8)])
 

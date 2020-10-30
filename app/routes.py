@@ -74,10 +74,8 @@ def info():
     print(form.graduation.data)
     if form.validate_on_submit():
         flash("Information Saved")
-        if form.firstName.data:
-            current_user.firstName = form.firstName.data
-        if form.lastName.data:
-            current_user.lastName = form.lastName.data
+        if form.name.data:
+            current_user.name = form.name.data
         if form.phone.data:
             current_user.phone = form.phone.data
         if form.wsuID.data:

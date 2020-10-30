@@ -6,15 +6,9 @@
     <form class = "form" action="" method="post">
         {{ form.hidden_tag() }}
         <div>
-            {{form.firstName.label}}<br>
-            {{form.firstName(placeholder=current_user.firstName)}}<br>
-            {% for error in form.firstName.errors %}
-            <span style="color: red;">[{{ error }}]</span><br>
-            {%endfor%}
-            
-            {{form.lastName.label(class_="formtitle")}}<br>
-            {{form.lastName(placeholder=current_user.lastName)}}<br>
-            {% for error in form.lastName.errors %}
+            {{form.name.label}}<br>
+            {{form.name(placeholder=current_user.name)}}<br>
+            {% for error in form.name.errors %}
             <span style="color: red;">[{{ error }}]</span><br>
             {%endfor%}
 
