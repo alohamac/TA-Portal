@@ -1,9 +1,10 @@
-from flask import render_template, flash, redirect, url_for, request
+from flask import render_template, flash, redirect, url_for
 from flask_login import current_user, login_user, logout_user, login_required
 
 from app import app, db
-from app.models import User
+from app.models import User, Course
 from app.forms import LoginForm, RegisterForm, InfoForm, CreateCourseForm
+
 
 @app.before_first_request
 def initDB(*args, **kwargs):
@@ -53,13 +54,20 @@ def professor_register():
     return render_template('register.html', form=form)
 
 
-@app.route('/professor/courses/create')
+@app.route('/professor/courses/create', methods=['GET', 'POST'])
 @login_required
 def professor_create_course():
     form = CreateCourseForm()
 
     if form.validate_on_submit():
-        pass
+        course = Course(name=form.name.data, description=form.description.data,
+                        semester=form.semester.data, year=form.year.data)
+        db.session.add(course)
+        db.session.commit()
+        flash('Course created')
+
+        # TODO: Redirect to course list page
+        return redirect('/')
 
     return render_template('professor/create_course.html', form=form)
 
@@ -104,7 +112,7 @@ def info():
             current_user.graduation = form.graduation.data
         db.session.commit()
         return redirect(url_for('info'))
-    return render_template('info.html', form = form)
+    return render_template('info.html', form=form)
 
 
 @app.route('/logout', methods=['GET'])

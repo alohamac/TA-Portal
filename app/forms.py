@@ -1,8 +1,6 @@
 from flask_wtf import FlaskForm
 from wtforms import StringField, SubmitField, SelectField, TextAreaField, PasswordField, BooleanField, IntegerField, DecimalField, DateField
 from wtforms.validators import  ValidationError, DataRequired, EqualTo, Length, Email, EqualTo, Optional
-from wtforms.widgets import ListWidget, CheckboxInput
-from wtforms.ext.sqlalchemy.fields import QuerySelectMultipleField
 
 from app.models import User
 
@@ -41,7 +39,7 @@ class InfoForm(FlaskForm):
 
 class CreateCourseForm(FlaskForm):
     name = StringField('Name', validators=[Length(max=64), DataRequired()])
-    description = StringField('Description', validators=[Length(max=1024), DataRequired()])
+    description = TextAreaField('Description', validators=[Length(max=1024), DataRequired()])
     semester = SelectField('Semester', choices=[
         'Spring',
         'Summer',
