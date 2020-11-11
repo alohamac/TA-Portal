@@ -3,17 +3,19 @@ from flask_login import current_user, login_user, logout_user, login_required
 
 from app import app, db
 from app.models import User
-from app.forms import LoginForm, RegisterForm, InfoForm
+from app.forms import LoginForm, RegisterForm, InfoForm, CreateCourseForm
 
 @app.before_first_request
 def initDB(*args, **kwargs):
     db.create_all()
+
 
 @app.route('/', methods=['GET', 'POST'])
 @app.route('/index', methods=['GET', 'POST'])
 @login_required
 def index():
     return render_template('index.html', user=current_user)
+
 
 @app.route('/student/register', methods=['GET', 'POST'])
 def student_register():
@@ -32,6 +34,7 @@ def student_register():
 
     return render_template('register.html', form=form)
 
+
 @app.route('/professor/register', methods=['GET', 'POST'])
 def professor_register():
     if current_user.is_authenticated:
@@ -48,6 +51,18 @@ def professor_register():
         return redirect(url_for('index'))
 
     return render_template('register.html', form=form)
+
+
+@app.route('/professor/courses/create')
+@login_required
+def professor_create_course():
+    form = CreateCourseForm()
+
+    if form.validate_on_submit():
+        pass
+
+    return render_template('professor/create_course.html', form=form)
+
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
@@ -66,6 +81,7 @@ def login():
         return redirect(url_for('index'))
 
     return render_template('login.html', form=form)
+
 
 @app.route('/info/', methods=['GET', 'POST'])
 @login_required
@@ -89,6 +105,7 @@ def info():
         db.session.commit()
         return redirect(url_for('info'))
     return render_template('info.html', form = form)
+
 
 @app.route('/logout', methods=['GET'])
 def logout():

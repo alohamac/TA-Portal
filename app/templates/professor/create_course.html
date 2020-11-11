@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <h1>Create Course</h1>
+    {% if form %}
+        <form class="form" action="" method="post">
+            {{ form.hidden_tag() }}
+            <div>
+                {{ form.name.label }}<br>
+                {{ form.name }}<br>
+                {% for error in form.name.errors %}
+                    <span style="color: red;">[{{ error }}]</span><br>
+                {% endfor %}
+
+                {{ form.description.label }}<br>
+                {{ form.description }}<br>
+                {% for error in form.description.errors %}
+                    <span style="color: red;">[{{ error }}]</span><br>
+                {% endfor %}
+
+                {{ form.semester.label }}<br>
+                {{ form.semester }}<br>
+                {% for error in form.semester.errors %}
+                    <span style="color: red;">[{{ error }}]</span><br>
+                {% endfor %}
+
+                {{ form.year.label }}<br>
+                {{ form.year }}<br>
+                {% for error in form.year.errors %}
+                    <span style="color: red;">[{{ error }}]</span><br>
+                {% endfor %}
+            </div>
+            <br>
+            {{ form.submit(class="button") }}
+        </form>
+    {% endif %}
+
+{% endblock %}
