@@ -9,12 +9,13 @@
     <div class="nav-container">
         <table>
             <tr>
-                <td><a href="/info" class="button">Edit Info</a></td>
+                <td><a href="/">Home</a></td>
+                <td><a href="/info" class="">Edit Info</a></td>
                 {% if current_user.is_authenticated %}
-                <td><a href="/logout" class="button"> Logout </a></td>
+                <td><a href="/logout" class=""> Logout </a></td>
                 <td>Hello, <span class="useritem">{{ current_user.name }}</span></td>
                 {% else %}
-                <td><a href="/login" class="button">Login</a></td>
+                <td><a href="/login" class="">Login</a></td>
                 {% endif %}
             </tr>
         </table>

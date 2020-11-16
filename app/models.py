@@ -23,6 +23,7 @@ class User(UserMixin, db.Model):
     major = db.Column(db.String(20))
     graduation = db.Column(db.DateTime)
 
+    courses = db.relationship('Course', backref= 'instructor', lazy='dynamic')
     def __repr__(self):
         return '<{} {}-{}>'.format("Professor" if self.is_professor else "Student", self.id, self.name)
 
@@ -40,6 +41,6 @@ class Course(db.Model):
     owner = db.ForeignKey(User.id)
     semester = db.Column(db.String(20))
     year = db.Column(db.Integer)
-
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
     def __repr__(self):
         return '<Course {} {} {}>'.format(self.name, self.semester, self.year)

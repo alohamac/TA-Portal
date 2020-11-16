@@ -6,6 +6,21 @@
     Hello Professor
     <a href="/professor/courses/create">Create Course</a>
 {% else %}
-    Hello Student
+    <h1>Hello Student</h1>
+    <h2>Open Positions</h2>
+    {% for course in courses %}
+        <table class = "course-box">
+            <tr>
+                <td width = "60%"> 
+                    {{course.name}} - {{course.semester}} {{course.year}}
+                </td>
+                <td width = "40%">
+                    <a href="/student/course-info/{{course.id}}" class ="button">more info</a>
+                </td>
+            </tr>
+        </table>
+    {% endfor %}
 {% endif %}
+
+
 {% endblock %}

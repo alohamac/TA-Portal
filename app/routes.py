@@ -15,7 +15,8 @@ def initDB(*args, **kwargs):
 @app.route('/index', methods=['GET', 'POST'])
 @login_required
 def index():
-    return render_template('index.html', user=current_user)
+    courses = Course.query.order_by(Course.year).all()
+    return render_template('index.html', user=current_user, courses = courses)
 
 
 @app.route('/student/register', methods=['GET', 'POST'])
@@ -34,6 +35,12 @@ def student_register():
         return redirect(url_for('index'))
 
     return render_template('register.html', form=form)
+
+@app.route('/student/course-info/<int:course_id>', methods=['GET'])
+@login_required
+def course_info(course_id):
+    course = Course.query.get_or_404(course_id)
+    return render_template('student/course_info.html', course=course)
 
 
 @app.route('/professor/register', methods=['GET', 'POST'])
@@ -61,7 +68,7 @@ def professor_create_course():
 
     if form.validate_on_submit():
         course = Course(name=form.name.data, description=form.description.data,
-                        semester=form.semester.data, year=form.year.data)
+                        semester=form.semester.data, year=form.year.data,user_id = current_user.id)
         db.session.add(course)
         db.session.commit()
         flash('Course created')
