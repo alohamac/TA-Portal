@@ -60,7 +60,7 @@ def student_register():
 @app.route('/student/course-info/<int:course_id>', methods=['GET'])
 @login_required
 @student
-def course_info(course_id):
+def student_course_info(course_id):
     course = Course.query.get_or_404(course_id)
     return render_template('student/course_info.html', course=course)
 
@@ -68,17 +68,17 @@ def course_info(course_id):
 @app.route('/student/application/<int:course_id>', methods = ['GET','POST'])
 @login_required
 @student
-def application(course_id):
+def student_application(course_id):
     form = ApplicationForm()
     course = Course.query.get_or_404(course_id)
     if form.validate_on_submit():
-        application = Application(semester = form.semester.data, year = form.year.data,
-                        student_id =current_user.id,course_id=course_id, grade=form.grade.data)
+        application = Application(semester=form.semester.data, year=form.year.data,
+                                  student_id=current_user.id, course_id=course_id, grade=form.grade.data)
         db.session.add(application)
         db.session.commit()
         flash('Application Sent')
         return redirect(url_for('index'))
-    return render_template('student/student_application.html', course = course, form=form)
+    return render_template('student/student_application.html', course=course, form=form)
 
 
 @app.route('/professor/register', methods=['GET', 'POST'])
