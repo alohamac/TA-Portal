@@ -37,7 +37,7 @@ class Course(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(64))
     description = db.Column(db.String(1024))
-    owner = db.ForeignKey(User.id)
+    professor = db.Column(db.Integer, db.ForeignKey(User.id))
     semester = db.Column(db.String(20))
     year = db.Column(db.Integer)
 

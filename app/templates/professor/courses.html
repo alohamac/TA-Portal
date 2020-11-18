@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <h1>Courses</h1>
+
+    <a href="/professor/courses/create">Create</a>
+
+    <table>
+        <tr>
+            <th>Name</th>
+            <th>Semester</th>
+            <th>Actions</th>
+        </tr>
+        {% for course in courses %}
+            <tr>
+                <td>{{ course.name }}</td>
+                <td>{{ course.semester }} {{ course.year }}</td>
+                <td>
+                    <a href="/professor/courses/edit/{{ course.id }}">Edit</a>
+                    <a href="/professor/courses/delete/{{ course.id }}">Delete</a>
+                </td>
+            </tr>
+        {% endfor %}
+    </table>
+{% endblock %}

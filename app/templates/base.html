@@ -9,8 +9,8 @@
     <div class="nav-container">
         <table>
             <tr>
-                <td><a href="/info" class="button">Edit Info</a></td>
                 {% if current_user.is_authenticated %}
+                <td><a href="/info" class="button">Edit Info</a></td>
                 <td><a href="/logout" class="button"> Logout </a></td>
                 <td>Hello, <span class="useritem">{{ current_user.name }}</span></td>
                 {% else %}
