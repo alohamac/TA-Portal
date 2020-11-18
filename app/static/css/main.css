@@ -1,0 +1,22 @@
+.course-box{
+    font-family: "Lucida Sans Unicode", "Lucida Grande", sans-serif;
+    border : 1px black solid;
+    width: 90%;
+    margin: 10px;
+    font-size: 20px;
+    padding: 10px;
+}
+
+.button{
+    width : 70px;    
+    font-size: 18px;
+    padding : 5px;
+    background-color: lightgrey;
+    border: 1px solid blue;
+}
+
+.text-box{
+    font-family: "Lucida Sans Unicode", "Lucida Grande", sans-serif;
+    margin-left : 10px;
+    width : 50%;
+}

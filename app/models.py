@@ -3,9 +3,11 @@ from app import db, login
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import UserMixin
 
+
 @login.user_loader
 def load_user(id):
     return User.query.get(int(id))
+
 
 class User(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -29,3 +31,15 @@ class User(UserMixin, db.Model):
     
     def check_password(self, password):
         return check_password_hash(self.password_hash, password)
+
+
+class Course(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(64))
+    description = db.Column(db.String(1024))
+    professor = db.Column(db.Integer, db.ForeignKey(User.id))
+    semester = db.Column(db.String(20))
+    year = db.Column(db.Integer)
+
+    def __repr__(self):
+        return '<Course {} {} {}>'.format(self.name, self.semester, self.year)
