@@ -2,8 +2,8 @@ from flask import render_template, flash, redirect, url_for
 from flask_login import current_user, login_user, logout_user, login_required
 
 from app import app, db
-from app.models import User, Course
-from app.forms import LoginForm, RegisterForm, InfoForm, CourseMetadataForm
+from app.models import User, Course, Application
+from app.forms import LoginForm, RegisterForm, InfoForm, CourseMetadataForm, ApplicationForm
 
 
 @app.before_first_request
@@ -42,12 +42,25 @@ def course_info(course_id):
     course = Course.query.get_or_404(course_id)
     return render_template('student/course_info.html', course=course)
 
+@app.route('/student/application/<int:course_id>', methods = ['GET','POST'])
+def application(course_id):
+    form = ApplicationForm()
+    course = Course.query.get_or_404(course_id)
+    if form.validate_on_submit():
+        application = Application(semester = form.semester.data, year = form.year.data,
+                        student_id =current_user.id,course_id=course_id, grade=form.grade.data)
+        db.session.add(application)
+        db.session.commit()
+        flash('Application Sent')
+        return redirect(url_for('index'))
+    return render_template('student/student_application.html', course = course, form=form)
+
+
 
 @app.route('/professor/register', methods=['GET', 'POST'])
 def professor_register():
     if current_user.is_authenticated:
         return redirect(url_for('index'))
-
     form = RegisterForm()
 
     if form.validate_on_submit():
@@ -115,6 +128,12 @@ def professor_delete_course(id):
 
     return redirect('/professor/courses')
 
+@app.route('/professor/applicants/<int:course_id>', methods=['GET'])
+@login_required
+def professor_applicants(course_id):
+    course = Course.query.get_or_404(course_id)
+    applicants = Application.query.filter_by(course_id=course_id)
+    return render_template('professor/applicants.html',course = course,applicants=applicants)
 
 @app.route('/professor/courses', methods=['GET'])
 @login_required

@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <h1>{{course.name}} applicants</h1>
+    <h2>{{course.semester}}  {{course.year}}</h2>
+    <table>
+        <tr>
+            <th>Name</th> 
+            <th>Grade</th> 
+            <th>Time Submitted</th>
+        </tr>
+        {%for app in applicants%}
+            <tr>
+                <td>{{app.student.name}}
+                <td>{{app.grade}}</td>
+                <td>{{ app.timestamp }}</td>
+            </tr>
+        {%endfor%}
+    </table>
+{%endblock%}

@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <h1>{{course.name}} {{course.semester}} {{course.year}} Application</h1>
+    {% if form %}
+        <form class="form" action="" method="post">
+            {{form.hidden_tag()}}
+            <div>
+                Semester Taken<br>
+                {{form.semester}} {{form.year}}<br>
+                {% for error in form.semester.errors %}
+                    <span style="color: red;">[{{ error }}]</span><br>
+                {% endfor %}
+                {% for error in form.year.errors %}
+                    <span style="color: red;">[{{ error }}]</span><br>
+                {% endfor %}
+                {{form.grade.label}}<br>
+                {{form.grade}}<br>
+                {% for error in form.grade.errors %}
+                    <span style="color: red;">[{{ error }}]</span><br>
+                {% endfor %}
+            </div>
+            {{form.submit(class="button")}}
+        </form>
+    {%  endif %}
+{%endblock%}
