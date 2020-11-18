@@ -10,11 +10,12 @@
         <table>
             <tr>
                 {% if current_user.is_authenticated %}
-                <td><a href="/info" class="button">Edit Info</a></td>
-                <td><a href="/logout" class="button"> Logout </a></td>
+                <td><a href="/">Home</a></td>
+                <td><a href="/info">Edit Info</a></td>
+                <td><a href="/logout"> Logout </a></td>
                 <td>Hello, <span class="useritem">{{ current_user.name }}</span></td>
                 {% else %}
-                <td><a href="/login" class="button">Login</a></td>
+                <td><a href="/login">Login</a></td>
                 {% endif %}
             </tr>
         </table>

@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <h1>{{course.name}} info</h1>
+    <h2>Semester</h2>
+    <div class="text-box">{{course.semester}}  {{course.year}}</div>
+    <h2>Instructor</h2>
+    <div class = "text-box">{{course.instructor.name}}</div>
+    <h2>Class Description</h2>
+    <div class="text-box">{{course.description}}</div>
+
+{%endblock%}
