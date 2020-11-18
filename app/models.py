@@ -44,15 +44,16 @@ class Course(db.Model,UserMixin):
     semester = db.Column(db.String(20))
     year = db.Column(db.Integer)
 
-    apps = db.relationship('Application', backref= 'applicant', lazy='dynamic') #so the user can see their active apps
+    apps = db.relationship('Application', backref='applicant', lazy='dynamic')  # so the user can see their active apps
     def __repr__(self):
         return '<Course {} {} {}>'.format(self.name, self.semester, self.year)
 
+
 class Application(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    semester = db.Column(db.String(20)) #semester taken
+    semester = db.Column(db.String(20))  # semester taken
     year = db.Column(db.Integer) 
-    grade =  db.Column(db.String(5))
+    grade = db.Column(db.String(5))
     timestamp = db.Column(db.DateTime, index=True, default=datetime.utcnow)
-    student_id = db.Column(db.Integer, db.ForeignKey('user.id')) #so the student can see active apps
-    course_id = db.Column(db.Integer, db.ForeignKey('course.id')) #so the prof can see their active openings
+    student_id = db.Column(db.Integer, db.ForeignKey('user.id'))  # so the student can see active apps
+    course_id = db.Column(db.Integer, db.ForeignKey('course.id'))  # so the prof can see their active openings

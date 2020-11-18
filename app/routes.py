@@ -1,3 +1,5 @@
+from functools import wraps
+
 from flask import render_template, flash, redirect, url_for
 from flask_login import current_user, login_user, logout_user, login_required
 
@@ -9,6 +11,24 @@ from app.forms import LoginForm, RegisterForm, InfoForm, CourseMetadataForm, App
 @app.before_first_request
 def initDB(*args, **kwargs):
     db.create_all()
+
+
+def student(func):
+    @wraps(func)
+    def decorator(*args, **kwargs):
+        if current_user.is_professor:
+            return redirect('/')
+        return func(*args, **kwargs)
+    return decorator
+
+
+def professor(func):
+    @wraps(func)
+    def decorator(*args, **kwargs):
+        if not current_user.is_professor:
+            return redirect('/')
+        return func(*args, **kwargs)
+    return decorator
 
 
 @app.route('/', methods=['GET', 'POST'])
@@ -36,13 +56,18 @@ def student_register():
 
     return render_template('register.html', form=form)
 
+
 @app.route('/student/course-info/<int:course_id>', methods=['GET'])
 @login_required
+@student
 def course_info(course_id):
     course = Course.query.get_or_404(course_id)
     return render_template('student/course_info.html', course=course)
 
+
 @app.route('/student/application/<int:course_id>', methods = ['GET','POST'])
+@login_required
+@student
 def application(course_id):
     form = ApplicationForm()
     course = Course.query.get_or_404(course_id)
@@ -54,7 +79,6 @@ def application(course_id):
         flash('Application Sent')
         return redirect(url_for('index'))
     return render_template('student/student_application.html', course = course, form=form)
-
 
 
 @app.route('/professor/register', methods=['GET', 'POST'])
@@ -76,6 +100,7 @@ def professor_register():
 
 @app.route('/professor/courses/create', methods=['GET', 'POST'])
 @login_required
+@professor
 def professor_create_course():
     form = CourseMetadataForm()
 
@@ -93,6 +118,7 @@ def professor_create_course():
 
 @app.route('/professor/courses/edit/<int:id>', methods=['GET', 'POST'])
 @login_required
+@professor
 def professor_edit_course(id):
     course = Course.query.get_or_404(id)
     form = CourseMetadataForm()
@@ -120,6 +146,7 @@ def professor_edit_course(id):
 
 @app.route('/professor/courses/delete/<int:id>', methods=['GET'])
 @login_required
+@professor
 def professor_delete_course(id):
     course = Course.query.get_or_404(id)
 
@@ -128,15 +155,19 @@ def professor_delete_course(id):
 
     return redirect('/professor/courses')
 
+
 @app.route('/professor/applicants/<int:course_id>', methods=['GET'])
 @login_required
+@professor
 def professor_applicants(course_id):
     course = Course.query.get_or_404(course_id)
     applicants = Application.query.filter_by(course_id=course_id)
     return render_template('professor/applicants.html',course = course,applicants=applicants)
 
+
 @app.route('/professor/courses', methods=['GET'])
 @login_required
+@professor
 def professor_courses():
     courses = db.session.query(Course).filter(User.id == Course.professor).all()
     return render_template('professor/courses.html', courses=courses)
