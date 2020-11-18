@@ -24,8 +24,8 @@ class User(UserMixin, db.Model):
     graduation = db.Column(db.DateTime)
     
     if is_professor != True:
-        applications = db.relationship('Application', backref= 'student', lazy='dynamic')  #for the student to know 
-    courses = db.relationship('Course', backref= 'instructor', lazy='dynamic')
+        applications = db.relationship('Application', backref='student', lazy='dynamic')  # for the student to know
+    courses = db.relationship('Course', backref='instructor', lazy='dynamic')
     def __repr__(self):
         return '<{} {}-{}>'.format("Professor" if self.is_professor else "Student", self.id, self.name)
 
@@ -36,15 +36,20 @@ class User(UserMixin, db.Model):
         return check_password_hash(self.password_hash, password)
 
 
-class Course(db.Model,UserMixin):
+class Course(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(64))
     description = db.Column(db.String(1024))
     professor = db.Column(db.Integer, db.ForeignKey(User.id))
     semester = db.Column(db.String(20))
     year = db.Column(db.Integer)
+    position_count = db.Column(db.Integer)
+    minimum_gpa = db.Column(db.Float)
+    minimum_grade = db.Column(db.String(5))
+    prior_experience = db.Column(db.String(1024))
 
     apps = db.relationship('Application', backref='applicant', lazy='dynamic')  # so the user can see their active apps
+
     def __repr__(self):
         return '<Course {} {} {}>'.format(self.name, self.semester, self.year)
 

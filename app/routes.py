@@ -5,7 +5,7 @@ from flask_login import current_user, login_user, logout_user, login_required
 
 from app import app, db
 from app.models import User, Course, Application
-from app.forms import LoginForm, RegisterForm, InfoForm, CourseMetadataForm, ApplicationForm
+from app.forms import LoginForm, RegisterForm, InfoForm, CreateCourseForm, ApplicationForm, EditCourseForm
 
 
 @app.before_first_request
@@ -102,11 +102,13 @@ def professor_register():
 @login_required
 @professor
 def professor_create_course():
-    form = CourseMetadataForm()
+    form = CreateCourseForm()
 
     if form.validate_on_submit():
         course = Course(name=form.name.data, description=form.description.data,
-                        semester=form.semester.data, year=form.year.data, professor=current_user.id)
+                        semester=form.semester.data, year=form.year.data, professor=current_user.id,
+                        position_count=form.position_count.data, minimum_gpa=form.position_count.data,
+                        minimum_grade=form.minimum_grade.data, prior_experience=form.prior_experience.data)
         db.session.add(course)
         db.session.commit()
         flash('Course created')
@@ -121,7 +123,7 @@ def professor_create_course():
 @professor
 def professor_edit_course(id):
     course = Course.query.get_or_404(id)
-    form = CourseMetadataForm()
+    form = EditCourseForm()
 
     if form.validate_on_submit():
         if form.name.data:
@@ -132,6 +134,14 @@ def professor_edit_course(id):
             course.semester = form.semester.data
         if form.year.data:
             course.year = form.year.data
+        if form.position_count.data:
+            course.position_count = form.position_count.data
+        if form.minimum_gpa.data:
+            course.minimum_gpa = form.minimum_gpa.data
+        if form.minimum_grade.data:
+            course.minimum_grade = form.minimum_grade.data
+        if form.prior_experience.data:
+            course.prior_experience = form.prior_experience.data
 
         db.session.commit()
 
@@ -140,6 +150,7 @@ def professor_edit_course(id):
     else:
         form.semester.data = course.semester
         form.year.data = str(course.year)
+        form.minimum_grade.data = course.minimum_grade
 
     return render_template('professor/edit_course.html', form=form, course=course)
 
