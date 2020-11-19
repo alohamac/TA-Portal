@@ -1,14 +1,34 @@
+from functools import wraps
+
 from flask import render_template, flash, redirect, url_for
 from flask_login import current_user, login_user, logout_user, login_required
 
 from app import app, db
-from app.models import User, Course
-from app.forms import LoginForm, RegisterForm, InfoForm, CourseMetadataForm
+from app.models import User, Course, Application
+from app.forms import LoginForm, RegisterForm, InfoForm, CreateCourseForm, ApplicationForm, EditCourseForm
 
 
 @app.before_first_request
 def initDB(*args, **kwargs):
     db.create_all()
+
+
+def student(func):
+    @wraps(func)
+    def decorator(*args, **kwargs):
+        if current_user.is_professor:
+            return redirect('/')
+        return func(*args, **kwargs)
+    return decorator
+
+
+def professor(func):
+    @wraps(func)
+    def decorator(*args, **kwargs):
+        if not current_user.is_professor:
+            return redirect('/')
+        return func(*args, **kwargs)
+    return decorator
 
 
 @app.route('/', methods=['GET', 'POST'])
@@ -36,18 +56,35 @@ def student_register():
 
     return render_template('register.html', form=form)
 
+
 @app.route('/student/course-info/<int:course_id>', methods=['GET'])
 @login_required
-def course_info(course_id):
+@student
+def student_course_info(course_id):
     course = Course.query.get_or_404(course_id)
     return render_template('student/course_info.html', course=course)
+
+
+@app.route('/student/application/<int:course_id>', methods = ['GET','POST'])
+@login_required
+@student
+def student_application(course_id):
+    form = ApplicationForm()
+    course = Course.query.get_or_404(course_id)
+    if form.validate_on_submit():
+        application = Application(semester=form.semester.data, year=form.year.data,
+                                  student_id=current_user.id, course_id=course_id, grade=form.grade.data)
+        db.session.add(application)
+        db.session.commit()
+        flash('Application Sent')
+        return redirect(url_for('index'))
+    return render_template('student/student_application.html', course=course, form=form)
 
 
 @app.route('/professor/register', methods=['GET', 'POST'])
 def professor_register():
     if current_user.is_authenticated:
         return redirect(url_for('index'))
-
     form = RegisterForm()
 
     if form.validate_on_submit():
@@ -63,12 +100,15 @@ def professor_register():
 
 @app.route('/professor/courses/create', methods=['GET', 'POST'])
 @login_required
+@professor
 def professor_create_course():
-    form = CourseMetadataForm()
+    form = CreateCourseForm()
 
     if form.validate_on_submit():
         course = Course(name=form.name.data, description=form.description.data,
-                        semester=form.semester.data, year=form.year.data, professor=current_user.id)
+                        semester=form.semester.data, year=form.year.data, professor=current_user.id,
+                        position_count=form.position_count.data, minimum_gpa=form.position_count.data,
+                        minimum_grade=form.minimum_grade.data, prior_experience=form.prior_experience.data)
         db.session.add(course)
         db.session.commit()
         flash('Course created')
@@ -80,9 +120,10 @@ def professor_create_course():
 
 @app.route('/professor/courses/edit/<int:id>', methods=['GET', 'POST'])
 @login_required
+@professor
 def professor_edit_course(id):
     course = Course.query.get_or_404(id)
-    form = CourseMetadataForm()
+    form = EditCourseForm()
 
     if form.validate_on_submit():
         if form.name.data:
@@ -93,6 +134,14 @@ def professor_edit_course(id):
             course.semester = form.semester.data
         if form.year.data:
             course.year = form.year.data
+        if form.position_count.data:
+            course.position_count = form.position_count.data
+        if form.minimum_gpa.data:
+            course.minimum_gpa = form.minimum_gpa.data
+        if form.minimum_grade.data:
+            course.minimum_grade = form.minimum_grade.data
+        if form.prior_experience.data:
+            course.prior_experience = form.prior_experience.data
 
         db.session.commit()
 
@@ -101,12 +150,14 @@ def professor_edit_course(id):
     else:
         form.semester.data = course.semester
         form.year.data = str(course.year)
+        form.minimum_grade.data = course.minimum_grade
 
     return render_template('professor/edit_course.html', form=form, course=course)
 
 
 @app.route('/professor/courses/delete/<int:id>', methods=['GET'])
 @login_required
+@professor
 def professor_delete_course(id):
     course = Course.query.get_or_404(id)
 
@@ -116,8 +167,18 @@ def professor_delete_course(id):
     return redirect('/professor/courses')
 
 
+@app.route('/professor/applicants/<int:course_id>', methods=['GET'])
+@login_required
+@professor
+def professor_applicants(course_id):
+    course = Course.query.get_or_404(course_id)
+    applicants = Application.query.filter_by(course_id=course_id)
+    return render_template('professor/applicants.html',course = course,applicants=applicants)
+
+
 @app.route('/professor/courses', methods=['GET'])
 @login_required
+@professor
 def professor_courses():
     courses = db.session.query(Course).filter(User.id == Course.professor).all()
     return render_template('professor/courses.html', courses=courses)
