@@ -6,50 +6,50 @@
         <form class="form" action="" method="post">
             {{ form.hidden_tag() }}
             <div>
-                {{ form.name.label }}<br>
-                {{ form.name }}<br>
+                {{ form.name.label(class="formtitle") }}<br>
+                {{ form.name(class="formbox") }}<br>
                 {% for error in form.name.errors %}
                     <span style="color: red;">[{{ error }}]</span><br>
                 {% endfor %}
 
-                {{ form.description.label }}<br>
-                {{ form.description }}<br>
+                {{ form.description.label(class="formtitle") }}<br>
+                {{ form.description(class="formbox") }}<br>
                 {% for error in form.description.errors %}
                     <span style="color: red;">[{{ error }}]</span><br>
                 {% endfor %}
 
-                {{ form.semester.label }}<br>
-                {{ form.semester }}<br>
+                {{ form.semester.label(class="formtitle") }}<br>
+                {{ form.semester(class="formselect")  }}<br>
                 {% for error in form.semester.errors %}
                     <span style="color: red;">[{{ error }}]</span><br>
                 {% endfor %}
 
-                {{ form.year.label }}<br>
-                {{ form.year }}<br>
+                {{ form.year.label (class="formtitle")}}<br>
+                {{ form.year(class="formselect")}}<br>
                 {% for error in form.year.errors %}
                     <span style="color: red;">[{{ error }}]</span><br>
                 {% endfor %}
 
-                {{ form.position_count.label }}<br>
-                {{ form.position_count }}<br>
+                {{ form.position_count.label(class="formtitle") }}<br>
+                {{ form.position_count(class="formbox")}}<br>
                 {% for error in form.position_count.errors %}
                     <span style="color: red;">[{{ error }}]</span><br>
                 {% endfor %}
 
-                {{ form.minimum_gpa.label }}<br>
-                {{ form.minimum_gpa }}<br>
+                {{ form.minimum_gpa.label(class="formtitle") }}<br>
+                {{ form.minimum_gpa(class="formbox") }}<br>
                 {% for error in form.minimum_gpa.errors %}
                     <span style="color: red;">[{{ error }}]</span><br>
                 {% endfor %}
 
-                {{ form.minimum_grade.label }}<br>
-                {{ form.minimum_grade }}<br>
+                {{ form.minimum_grade.label(class="formtitle") }}<br>
+                {{ form.minimum_grade(class="formselect") }}<br>
                 {% for error in form.minimum_grade.errors %}
                     <span style="color: red;">[{{ error }}]</span><br>
                 {% endfor %}
 
-                {{ form.prior_experience.label }}<br>
-                {{ form.prior_experience }}<br>
+                {{ form.prior_experience.label (class="formtitle") }}<br>
+                {{ form.prior_experience(class="formbox") }}<br>
                 {% for error in form.prior_experience.errors %}
                     <span style="color: red;">[{{ error }}]</span><br>
                 {% endfor %}

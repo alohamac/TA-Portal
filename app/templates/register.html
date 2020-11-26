@@ -7,35 +7,35 @@
 <form class="form" action="" method="post">
     {{ form.hidden_tag() }}
     <div>
-        {{ form.name.label }}<br>
-        {{ form.name }}<br>
+        {{ form.name.label(class="formtitle") }}<br>
+        {{ form.name(class="formbox")}}<br>
         {% for error in form.name.errors %}
         <span style="color: red;">[{{ error }}]</span>
         <br>
         {% endfor %}
 
-        {{ form.email.label }}<br>
-        {{ form.email }}<br>
+        {{ form.email.label(class="formtitle") }}<br>
+        {{ form.email(class="formbox")}}<br>
         {% for error in form.email.errors %}
         <span style="color: red;">[{{ error }}]</span>
         <br>
         {% endfor %}
 
-        {{ form.password.label }}<br>
-        {{ form.password }}<br>
+        {{ form.password.label(class="formtitle") }}<br>
+        {{ form.password(class="formbox") }}<br>
         {% for error in form.password.errors %}
         <span style="color: red;">[{{ error }}]</span>
         <br>
         {% endfor %}
 
-        {{ form.confirm_password.label }}<br>
-        {{ form.confirm_password }}<br>
+        {{ form.confirm_password.label(class="formtitle") }}<br>
+        {{ form.confirm_password(class="formbox") }}<br>
         {% for error in form.confirm_password.errors %}
         <span style="color: red;">[{{ error }}]</span>
         <br>
         {% endfor %}
     </div>
-    {{ form.submit(class="") }}
+    {{ form.submit(class="btn btn-primary basic-margin") }}
 </form>
 {% endif %}
 {% endblock %}

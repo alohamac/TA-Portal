@@ -35,7 +35,10 @@ def professor(func):
 @app.route('/index', methods=['GET', 'POST'])
 @login_required
 def index():
-    courses = Course.query.order_by(Course.year).all()
+    if current_user.is_professor:
+        courses = Course.query.filter_by(professor=current_user.id)
+    else:
+        courses = Course.query.order_by(Course.year).all()
     return render_template('index.html', user=current_user, courses=courses)
 
 
@@ -180,7 +183,7 @@ def professor_applicants(course_id):
 @login_required
 @professor
 def professor_courses():
-    courses = db.session.query(Course).filter(User.id == Course.professor).all()
+    courses = db.session.query(Course).filter(current_user.id == Course.professor).all()
     return render_template('professor/courses.html', courses=courses)
 
 
@@ -207,7 +210,6 @@ def login():
 @login_required
 def info():
     form = InfoForm()
-    print(form.graduation.data)
     if form.validate_on_submit():
         flash("Information Saved")
         if form.name.data:

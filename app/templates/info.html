@@ -1,25 +1,26 @@
 {% extends "base.html" %}
-
+{% import 'bootstrap/wtf.html' as wtf %}
 {% block content %}
     <h1>Contact Information</h1>
+
     {%if form%}
     <form class = "form" action="" method="post">
         {{ form.hidden_tag() }}
         <div>
-            {{form.name.label}}<br>
-            {{form.name(placeholder=current_user.name)}}<br>
+            {{form.name.label (class="formtitle")}}<br>
+            {{form.name(placeholder=current_user.name, class="formbox")}}<br>
             {% for error in form.name.errors %}
             <span style="color: red;">[{{ error }}]</span><br>
             {%endfor%}
 
             {{form.phone.label(class_="formtitle")}}<br>
-            {{form.phone(class_="formtitle", placeholder = current_user.phone)}}<br>
+            {{form.phone(class_="formbox", placeholder = current_user.phone)}}<br>
             {% for error in form.phone.errors %}
             <span style="color: red;">[{{ error }}]</span><br>
             {%endfor%}
 
-            {{form.wsuID.label}}<br>
-            {{form.wsuID(placeholder = current_user.wsuID)}}<br>
+            {{form.wsuID.label(class="formtitle")}}<br>
+            {{form.wsuID(placeholder = current_user.wsuID,class="formbox")}}<br>
             {% for error in form.wsuID.errors %}
             <span style="color: red;">[{{ error }}]</span><br>
             {%endfor%}
@@ -27,20 +28,20 @@
             {%if current_user.is_professor == None %}
                 <h1>Additional information</h1>
                 <div>
-                    {{form.gpa.label}}<br>
-                    {{form.gpa(placeholder=current_user.gpa)}}<br>
+                    {{form.gpa.label(class="formtitle")}}<br>
+                    {{form.gpa(placeholder=current_user.gpa, class="formbox")}}<br>
                     {% for error in form.gpa.errors %}
                     <span style="color: red;">[{{ error }}]</span><br>
                     {%endfor%}
                     
-                    {{form.major.label}}<br>
-                    {{form.major(placeholder=current_user.major)}}<br>
+                    {{form.major.label(class="formtitle")}}<br>
+                    {{form.major(placeholder=current_user.major, class="formbox")}}<br>
                     {% for error in form.major.errors %}
                     <span style="color: red;">[{{ error }}]</span><br>
                     {%endfor%}
 
-                    {{form.graduation.label}}<br>
-                    {{form.graduation(placeholder="mm/yyyy")}}<br>
+                    {{form.graduation.label(class="formtitle")}}<br>
+                    {{form.graduation(placeholder="mm/yyyy", class="formbox")}}<br>
                     {% for error in form.graduation.errors %}
                     <span style="color: red;">[{{ error }}]</span><br>
                     {%endfor%}
@@ -48,7 +49,7 @@
                 </div>
             {%endif%}
         </div><br>
-        {{ form.submit(class="button") }}
+        {{ form.submit(class="btn btn-primary basic-margin") }}
     </form>
     {%endif%}
 

@@ -6,21 +6,21 @@
         <form class="form" action="" method="post">
             {{form.hidden_tag()}}
             <div>
-                Semester Taken<br>
-                {{form.semester}} {{form.year}}<br>
+                <span class="formtitle">Semester Taken</span><br>
+                {{form.semester(class="formselect")}} {{form.year(class="formselect")}}<br>
                 {% for error in form.semester.errors %}
                     <span style="color: red;">[{{ error }}]</span><br>
                 {% endfor %}
                 {% for error in form.year.errors %}
                     <span style="color: red;">[{{ error }}]</span><br>
                 {% endfor %}
-                {{form.grade.label}}<br>
-                {{form.grade}}<br>
+                {{form.grade.label(class="formtitle")}}<br>
+                {{form.grade(class="formselect")}}<br>
                 {% for error in form.grade.errors %}
                     <span style="color: red;">[{{ error }}]</span><br>
                 {% endfor %}
             </div>
-            {{form.submit(class="button")}}
+            {{form.submit(class="btn btn-primary basic-margin")}}
         </form>
     {%  endif %}
 {%endblock%}
