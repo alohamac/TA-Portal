@@ -4,6 +4,7 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import UserMixin
 from datetime import datetime
 
+
 @login.user_loader
 def load_user(id):
     return User.query.get(int(id))
@@ -22,16 +23,17 @@ class User(UserMixin, db.Model):
     gpa = db.Column(db.Float)
     major = db.Column(db.String(20))
     graduation = db.Column(db.DateTime)
-    
+
     if is_professor != True:
         applications = db.relationship('Application', backref='student', lazy='dynamic')  # for the student to know
     courses = db.relationship('Course', backref='instructor', lazy='dynamic')
+
     def __repr__(self):
         return '<{} {}-{}>'.format("Professor" if self.is_professor else "Student", self.id, self.name)
 
     def set_password(self, password):
         self.password_hash = generate_password_hash(password)
-    
+
     def check_password(self, password):
         return check_password_hash(self.password_hash, password)
 
@@ -57,8 +59,9 @@ class Course(db.Model, UserMixin):
 class Application(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     semester = db.Column(db.String(20))  # semester taken
-    year = db.Column(db.Integer) 
+    year = db.Column(db.Integer)
     grade = db.Column(db.String(5))
     timestamp = db.Column(db.DateTime, index=True, default=datetime.utcnow)
+    accepted = db.Column(db.Boolean, default=False)
     student_id = db.Column(db.Integer, db.ForeignKey('user.id'))  # so the student can see active apps
     course_id = db.Column(db.Integer, db.ForeignKey('course.id'))  # so the prof can see their active openings

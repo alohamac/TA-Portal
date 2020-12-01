@@ -19,6 +19,7 @@ def student(func):
         if current_user.is_professor:
             return redirect('/')
         return func(*args, **kwargs)
+
     return decorator
 
 
@@ -28,6 +29,7 @@ def professor(func):
         if not current_user.is_professor:
             return redirect('/')
         return func(*args, **kwargs)
+
     return decorator
 
 
@@ -68,7 +70,7 @@ def student_course_info(course_id):
     return render_template('student/course_info.html', course=course)
 
 
-@app.route('/student/application/<int:course_id>', methods = ['GET','POST'])
+@app.route('/student/application/<int:course_id>', methods=['GET', 'POST'])
 @login_required
 @student
 def student_application(course_id):
@@ -116,7 +118,7 @@ def professor_create_course():
         db.session.commit()
         flash('Course created')
 
-        return redirect('/professor/courses')
+        return redirect('/')
 
     return render_template('professor/create_course.html', form=form)
 
@@ -176,7 +178,7 @@ def professor_delete_course(id):
 def professor_applicants(course_id):
     course = Course.query.get_or_404(course_id)
     applicants = Application.query.filter_by(course_id=course_id)
-    return render_template('professor/applicants.html',course = course,applicants=applicants)
+    return render_template('professor/applicants.html', course=course, applicants=applicants)
 
 
 @app.route('/professor/courses', methods=['GET'])
@@ -196,6 +198,35 @@ def professor_application(app_id):
     course = Course.query.get_or_404(application.course_id)
 
     return render_template('professor/student.html', app=application, student=student, course=course)
+
+
+@app.route('/professor/assign/<int:app_id>', methods=['GET'])
+@login_required
+@professor
+def professor_assign(app_id):
+    application = Application.query.get_or_404(app_id)
+    course = Course.query.get_or_404(application.course_id)
+    accepted_apps = Application.query.filter(
+        Application.course_id == application.course_id, Application.accepted == True).all()
+
+    if len(accepted_apps) >= course.position_count:
+        flash('All positions already filled!')
+    else:
+        application.accepted = True
+        db.session.commit()
+    return redirect('/professor/applicants/{}'.format(course.id))
+
+
+@app.route('/professor/unassign/<int:app_id>', methods=['GET'])
+@login_required
+@professor
+def professor_unassign(app_id):
+    application = Application.query.get_or_404(app_id)
+    course = Course.query.get_or_404(application.course_id)
+
+    application.accepted = False
+    db.session.commit()
+    return redirect('/professor/applicants/{}'.format(course.id))
 
 
 @app.route('/login', methods=['GET', 'POST'])

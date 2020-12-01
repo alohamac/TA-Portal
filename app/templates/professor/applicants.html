@@ -16,7 +16,12 @@
                 <td>{{ app.grade }}</td>
                 <td>{{ app.timestamp }}</td>
                 <td>
-                    <a href="/professor/application/{{ app.id }}">View Student</a>
+                    <a href="/professor/application/{{ app.id }}">View</a>
+                    {% if app.accepted %}
+                        <a href="/professor/unassign/{{ app.id }}">Unassign</a>
+                    {% else %}
+                        <a href="/professor/assign/{{ app.id }}">Assign</a>
+                    {% endif %}
                 </td>
             </tr>
         {% endfor %}
