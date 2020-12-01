@@ -3,10 +3,8 @@
 {% block content %}
 
 {% if user.is_professor %}
-    <h1>Hello Professor</h1>
     {%include "professor/courses.html" %}
 {% else %}
-    <h1>Hello Student</h1>
     <h2>Open Positions</h2>
     <table class="table table-striped">
         {% for course in courses %} 

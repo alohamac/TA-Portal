@@ -187,6 +187,17 @@ def professor_courses():
     return render_template('professor/courses.html', courses=courses)
 
 
+@app.route('/professor/application/<int:app_id>', methods=['GET'])
+@login_required
+@professor
+def professor_application(app_id):
+    application = Application.query.get_or_404(app_id)
+    student = User.query.get_or_404(application.student_id)
+    course = Course.query.get_or_404(application.course_id)
+
+    return render_template('professor/student.html', app=application, student=student, course=course)
+
+
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     if current_user.is_authenticated:

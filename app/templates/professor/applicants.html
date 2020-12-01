@@ -1,20 +1,24 @@
 {% extends "base.html" %}
 
 {% block content %}
-    <h1>{{course.name}} applicants</h1>
-    <h2>{{course.semester}}  {{course.year}}</h2>
+    <h1>{{ course.name }} applicants</h1>
+    <h2>{{ course.semester }} {{ course.year }}</h2>
     <table class="table table-striped">
         <tr>
-            <th>Name</th> 
-            <th>Grade</th> 
+            <th>Name</th>
+            <th>Grade</th>
             <th>Time Submitted</th>
+            <th>Actions</th>
         </tr>
-        {%for app in applicants%}
+        {% for app in applicants %}
             <tr>
-                <td>{{app.student.name}}
-                <td>{{app.grade}}</td>
+                <td>{{ app.student.name }}
+                <td>{{ app.grade }}</td>
                 <td>{{ app.timestamp }}</td>
+                <td>
+                    <a href="/professor/application/{{ app.id }}">View Student</a>
+                </td>
             </tr>
-        {%endfor%}
+        {% endfor %}
     </table>
-{%endblock%}
+{% endblock %}

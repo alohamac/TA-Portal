@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <h1>{{ app.student.name }}</h1>
+    <h2>Course</h2>
+    <div class="text-box">{{ course.name }} {{ course.semester }} {{ course.year }}</div>
+    <h2>Semester Taken</h2>
+    <div class="text-box">{{ app.semester }} {{ course.year }}</div>
+    <h2>Grade</h2>
+    <div class="text-box">{{ app.grade }}</div>
+    <h2>GPA</h2>
+    <div class="text-box">{{ student.gpa }}</div>
+    <h2>Submission Time</h2>
+    <div class="text-box">{{ app.timestamp }}</div>
+{% endblock %}
