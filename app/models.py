@@ -4,7 +4,18 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import UserMixin
 from datetime import datetime
 
-
+grades = [(0, 'A'),
+        (1, 'A-'),
+        (2, 'B+'),
+        (3, 'B'),
+        (4, 'B-'),
+        (5, 'C+'),
+        (6, 'C'),
+        (7, 'C-'),
+        (8, 'D+'),
+        (9, 'D'),
+        (10, 'F')
+]
 @login.user_loader
 def load_user(id):
     return User.query.get(int(id))
@@ -26,8 +37,8 @@ class User(UserMixin, db.Model):
 
     if is_professor != True:
         applications = db.relationship('Application', backref='student', lazy='dynamic')  # for the student to know
+        experiences = db.relationship('Experience', backref='experience', lazy ='dynamic')
     courses = db.relationship('Course', backref='instructor', lazy='dynamic')
-
     def __repr__(self):
         return '<{} {}-{}>'.format("Professor" if self.is_professor else "Student", self.id, self.name)
 
@@ -51,7 +62,7 @@ class Course(db.Model, UserMixin):
     prior_experience = db.Column(db.String(1024))
 
     apps = db.relationship('Application', backref='applicant', lazy='dynamic')  # so the user can see their active apps
-
+    experience = db.relationship('Experience', backref='course', lazy='dynamic')
     def __repr__(self):
         return '<Course {} {} {}>'.format(self.name, self.semester, self.year)
 
@@ -65,3 +76,11 @@ class Application(db.Model):
     accepted = db.Column(db.Boolean, default=False)
     student_id = db.Column(db.Integer, db.ForeignKey('user.id'))  # so the student can see active apps
     course_id = db.Column(db.Integer, db.ForeignKey('course.id'))  # so the prof can see their active openings
+
+
+class Experience(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    past_ta = db.Column(db.Boolean, default=False)
+    grade = db.Column(db.String(5))
+    student_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+    course_id = db.Column(db.Integer, db.ForeignKey('course.id'))

@@ -4,10 +4,11 @@ from flask import render_template, flash, redirect, url_for
 from flask_login import current_user, login_user, logout_user, login_required
 
 from app import app, db
-from app.models import User, Course, Application
-from app.forms import LoginForm, RegisterForm, InfoForm, CreateCourseForm, ApplicationForm, EditCourseForm
+from app.models import User, Course, Application, Experience
+from app.forms import LoginForm, RegisterForm, InfoForm, CreateCourseForm, ApplicationForm, EditCourseForm, ExperienceForm, validGrades
 
-
+from jinja2 import Environment
+e = Environment(extensions=["jinja2.ext.do",])
 @app.before_first_request
 def initDB(*args, **kwargs):
     db.create_all()
@@ -41,7 +42,12 @@ def index():
         courses = Course.query.filter_by(professor=current_user.id)
     else:
         courses = Course.query.order_by(Course.year).all()
-    return render_template('index.html', user=current_user, courses=courses)
+        # min_grade = 10;
+        # for i in range(len(validGrades)):
+        # if (validGrades[i]==''):
+        #     min_grade = i
+        #     break
+    return render_template('index.html', user=current_user, courses=courses,grades = validGrades)
 
 
 @app.route('/student/register', methods=['GET', 'POST'])
@@ -69,13 +75,12 @@ def student_course_info(course_id):
     course = Course.query.get_or_404(course_id)
     return render_template('student/course_info.html', course=course)
 
-
 @app.route('/student/application/<int:course_id>', methods=['GET', 'POST'])
 @login_required
 @student
 def student_application(course_id):
-    form = ApplicationForm()
     course = Course.query.get_or_404(course_id)
+    form = ApplicationForm(min_grade=course.minimum_grade)
     if form.validate_on_submit():
         application = Application(semester=form.semester.data, year=form.year.data,
                                   student_id=current_user.id, course_id=course_id, grade=form.grade.data)
@@ -85,6 +90,51 @@ def student_application(course_id):
         return redirect(url_for('index'))
     return render_template('student/student_application.html', course=course, form=form)
 
+@app.route('/student/active_applications')
+@login_required
+@student
+def active_applications():
+    return render_template('student/active_applications.html')
+
+@app.route('/student/withdraw/<int:id>', methods=['GET', 'POST'])
+@login_required
+@student
+def student_withdraw(id):
+    application = Application.query.get_or_404(id)
+    db.session.delete(application)
+    db.session.commit()
+    flash('Withdrew Application')
+    return redirect(url_for('active_applications'))
+
+@app.route('/student/experience/', methods=['POST', 'GET'])
+@login_required
+@student
+def student_experience():
+    courses = Course.query.order_by(Course.name).all()
+    return render_template('student/experience.html', courses=courses)
+
+@app.route('/student/experience/<int:id>', methods=['POST', 'GET'])
+@login_required
+@student
+def student_experience_form(id):
+    form = ExperienceForm()
+    course = Course.query.get_or_404(id)
+    if form.validate_on_submit():
+        flash("Experience Added")
+        experience = Experience(grade=form.grade.data, past_ta = form.past_TA.data, course_id = id, student_id = current_user.id)
+        db.session.add(experience)
+        db.session.commit()
+        return redirect(url_for('student_experience'))
+    return render_template('student/experience_form.html', course = course, form = form)
+
+@app.route('/student/experience/delete/<int:id>', methods=['POST', 'GET'])
+@login_required
+@student
+def student_delete_experience(id):
+    experience = Experience.query.get_or_404(id)
+    db.session.delete(experience)
+    db.session.commit()
+    return redirect(url_for('student_experience'))
 
 @app.route('/professor/register', methods=['GET', 'POST'])
 def professor_register():
@@ -196,7 +246,6 @@ def professor_application(app_id):
     application = Application.query.get_or_404(app_id)
     student = User.query.get_or_404(application.student_id)
     course = Course.query.get_or_404(application.course_id)
-
     return render_template('professor/student.html', app=application, student=student, course=course)
 
 

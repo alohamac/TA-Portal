@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h2>{{course.name}}</h2>
+    {% if form %}
+    <form class="form" action="" method="post">
+        {{form.hidden_tag()}}
+        <div>
+            {{form.grade.label(class="formtitle")}}<br>
+            {{form.grade(class="formselect")}}<br>
+            {% for error in form.grade.errors %}
+                <span style="color: red;">[{{ error }}]</span><br>
+            {% endfor %}
+            {{ form.past_TA(class="basic-margin") }} {{ form.past_TA.label }}<br>
+        </div>
+        {{form.submit(class="btn btn-primary basic-margin")}}
+    </form>
+    {%  endif %}
+{% endblock %}

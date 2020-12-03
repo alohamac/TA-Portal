@@ -12,4 +12,10 @@
     <div class="text-box">{{ student.gpa }}</div>
     <h2>Submission Time</h2>
     <div class="text-box">{{ app.timestamp }}</div>
+    <h2>TA Experience</h2>
+    {%for exp in student.experiences%}
+        {%if exp.past_ta %}
+        <div class="text-box">{{exp.course.name}}</div>
+        {%endif%}
+    {%endfor%}
 {% endblock %}

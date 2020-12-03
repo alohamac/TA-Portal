@@ -49,7 +49,6 @@ validGrades = [
     'F'
 ]
 
-
 class RegisterForm(FlaskForm):
     name = StringField('Name', validators=[DataRequired()])
     email = StringField('Email', validators=[DataRequired(), Email()])
@@ -111,3 +110,8 @@ class ApplicationForm(FlaskForm):
     year = SelectField('Year Taken', choices=validPastYears, validators=[DataRequired()])
     grade = SelectField('Grade received', choices=validGrades, validators=[DataRequired()])
     submit = SubmitField('Apply')
+
+class ExperienceForm(FlaskForm):
+    grade = SelectField('Grade received', choices=validGrades, validators=[DataRequired()])
+    past_TA = BooleanField('Previously a TA for this class?')
+    submit = SubmitField('Submit')

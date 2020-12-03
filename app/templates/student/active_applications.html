@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h2>Your Applications</h2>
+<table class="table table-striped">
+    <tr>
+        <th>Course</th>
+        <th>Status</th>
+        <th>Actions</th>
+    </tr>
+    {% for app in current_user.applications %}
+        <tr>
+            <td>{{ app.applicant.name }} - {{app.applicant.semester}} {{app.applicant.year}}</td>
+            {%if app.accepted %}
+                <td style="color:green">Accepted</td>
+            {%else%}
+                <td style="color:red">Pending</td>
+            {%endif%}
+            <td><a href="/student/withdraw/{{app.id}}">Withdraw</a></td>
+        </tr>
+    {% endfor %}
+</table>
+{% endblock %}
