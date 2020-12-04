@@ -6,7 +6,6 @@ from flask_login import current_user, login_user, logout_user, login_required
 from app import app, db
 from app.models import User, Course, Application, Experience
 from app.forms import LoginForm, RegisterForm, InfoForm, CreateCourseForm, ApplicationForm, EditCourseForm, ExperienceForm, validGrades
-
 from jinja2 import Environment
 e = Environment(extensions=["jinja2.ext.do",])
 @app.before_first_request
@@ -80,15 +79,22 @@ def student_course_info(course_id):
 @student
 def student_application(course_id):
     course = Course.query.get_or_404(course_id)
-    form = ApplicationForm(min_grade=course.minimum_grade)
-    if form.validate_on_submit():
+    form = ApplicationForm()
+    grades = [ 'A', 'A-', 'B+', 'B', 'B-', 'C+', 'C', 'C-', 'D+', 'D', 'F' ]
+    validGrades = []
+    for g in grades:
+        if (g==course.minimum_grade):
+            validGrades.append(g)
+            break
+        validGrades.append(g)
+    if form.is_submitted():
         application = Application(semester=form.semester.data, year=form.year.data,
                                   student_id=current_user.id, course_id=course_id, grade=form.grade.data)
         db.session.add(application)
         db.session.commit()
         flash('Application Sent')
         return redirect(url_for('index'))
-    return render_template('student/student_application.html', course=course, form=form)
+    return render_template('student/student_application.html', course=course, form=form,gradeSelection = validGrades)
 
 @app.route('/student/active_applications')
 @login_required

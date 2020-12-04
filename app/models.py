@@ -4,18 +4,6 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import UserMixin
 from datetime import datetime
 
-grades = [(0, 'A'),
-        (1, 'A-'),
-        (2, 'B+'),
-        (3, 'B'),
-        (4, 'B-'),
-        (5, 'C+'),
-        (6, 'C'),
-        (7, 'C-'),
-        (8, 'D+'),
-        (9, 'D'),
-        (10, 'F')
-]
 @login.user_loader
 def load_user(id):
     return User.query.get(int(id))

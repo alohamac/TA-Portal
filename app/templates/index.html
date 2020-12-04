@@ -19,6 +19,12 @@
                 {%endif%}
             {%endfor%}
             {%if exp.past_ta or pastGrade[0] <= courseMinGrade[0]%}
+                {%set applied = []%}
+                {%for app in current_user.applications%}
+                    {%if app.applicant.id == exp.course.id%}
+                        {%do applied.append(app.applicant.id) %}
+                    {%endif%}
+                {%endfor%}
                 <tr>
                     <td width = "10%"> 
                         {{exp.course.name}} - {{exp.course.semester}} {{exp.course.year}}
@@ -27,7 +33,9 @@
                         <a href="/student/course-info/{{exp.course.id}}"><span class="text-large">more info</span></a>
                     </td>
                     <td width="20%">
-                        <a href="student/application/{{exp.course.id}}">apply</a>
+                        {%if not applied%}
+                            <a href="student/application/{{exp.course.id}}">apply</a>
+                        {%endif%}
                     </td>
                 </tr>
             {%endif%}
@@ -37,6 +45,12 @@
     <h2>All Positions</h2>
     <table class="table table-striped" style="font-size: 20px;">
         {% for course in courses %} 
+            {%set applied = []%}
+            {%for app in current_user.applications%}
+                {%if app.applicant.id == course.id%}
+                    {%do applied.append(app.applicant.id) %}
+                {%endif%}
+            {%endfor%}
             <tr>
                 <td width = "10%"> 
                     {{course.name}} - {{course.semester}} {{course.year}}
@@ -45,7 +59,9 @@
                     <a href="/student/course-info/{{course.id}}"><span class="text-large">more info</span></a>
                 </td>
                 <td width="20%">
+                    {%if not applied%}
                     <a href="student/application/{{course.id}}">apply</a>
+                    {%endif%}
                 </td>
             </tr>
         {% endfor %}

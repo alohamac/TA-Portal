@@ -14,6 +14,9 @@
                 {% for error in form.year.errors %}
                     <span style="color: red;">[{{ error }}]</span><br>
                 {% endfor %}
+                {%for g in gradeSelection%}
+                    {%do form.grade.choices.append(g)%}
+                {%endfor%}
                 {{form.grade.label(class="formtitle")}}<br>
                 {{form.grade(class="formselect")}}<br>
                 {% for error in form.grade.errors %}

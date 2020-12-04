@@ -106,9 +106,10 @@ class EditCourseForm(FlaskForm):
 
 
 class ApplicationForm(FlaskForm):
+    gradeSelection=[]
     semester = SelectField('Semester Taken', choices=validSemesters, validators=[DataRequired()])
     year = SelectField('Year Taken', choices=validPastYears, validators=[DataRequired()])
-    grade = SelectField('Grade received', choices=validGrades, validators=[DataRequired()])
+    grade = SelectField('Grade received', choices=gradeSelection)
     submit = SubmitField('Apply')
 
 class ExperienceForm(FlaskForm):
