@@ -1,7 +1,7 @@
 from flask_wtf import FlaskForm
 from wtforms import StringField, SubmitField, SelectField, TextAreaField, PasswordField, BooleanField, IntegerField,\
     DecimalField, DateField
-from wtforms.validators import  ValidationError, DataRequired, EqualTo, Length, Email, EqualTo, Optional
+from wtforms.validators import  ValidationError, DataRequired, EqualTo, Length, Email, EqualTo, Optional, NumberRange
 
 from app.models import User
 
@@ -57,6 +57,8 @@ class RegisterForm(FlaskForm):
     submit = SubmitField('Register')
 
     def validate_email(self, email):
+        if not email.data.endswith("@wsu.edu"):
+            raise ValidationError('Sorry, this application is only available to WSU students and professors')
         user = User.query.filter_by(email=email.data).first()
         if user is not None:
             raise ValidationError('Email is already in use. Forgot password?')
@@ -86,7 +88,7 @@ class CreateCourseForm(FlaskForm):
     description = TextAreaField('Description', validators=[Length(max=1024), DataRequired()])
     semester = SelectField('Semester', choices=validSemesters, validators=[DataRequired()])
     year = SelectField('Year', choices=validYears)
-    position_count = IntegerField('Position Count', validators=[DataRequired()])
+    position_count = IntegerField('Position Count', validators=[DataRequired(), NumberRange(1)])
     minimum_gpa = DecimalField('Minimum GPA', validators=[DataRequired()], places=2)
     minimum_grade = SelectField('Minimum Grade', choices=validGrades, validators=[DataRequired()])
     prior_experience = TextAreaField('Prior Experience', validators=[Length(max=1024), DataRequired()])
@@ -111,6 +113,7 @@ class ApplicationForm(FlaskForm):
     year = SelectField('Year Taken', choices=validPastYears, validators=[DataRequired()])
     grade = SelectField('Grade received', choices=gradeSelection)
     submit = SubmitField('Apply')
+
 
 class ExperienceForm(FlaskForm):
     grade = SelectField('Grade received', choices=validGrades, validators=[DataRequired()])

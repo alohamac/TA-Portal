@@ -4,6 +4,7 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import UserMixin
 from datetime import datetime
 
+
 @login.user_loader
 def load_user(id):
     return User.query.get(int(id))
@@ -25,8 +26,9 @@ class User(UserMixin, db.Model):
 
     if is_professor != True:
         applications = db.relationship('Application', backref='student', lazy='dynamic')  # for the student to know
-        experiences = db.relationship('Experience', backref='experience', lazy ='dynamic')
+        experiences = db.relationship('Experience', backref='experience', lazy='dynamic')
     courses = db.relationship('Course', backref='instructor', lazy='dynamic')
+
     def __repr__(self):
         return '<{} {}-{}>'.format("Professor" if self.is_professor else "Student", self.id, self.name)
 
@@ -51,6 +53,7 @@ class Course(db.Model, UserMixin):
 
     apps = db.relationship('Application', backref='applicant', lazy='dynamic')  # so the user can see their active apps
     experience = db.relationship('Experience', backref='course', lazy='dynamic')
+
     def __repr__(self):
         return '<Course {} {} {}>'.format(self.name, self.semester, self.year)
 

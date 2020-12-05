@@ -7,7 +7,10 @@ from app import app, db
 from app.models import User, Course, Application, Experience
 from app.forms import LoginForm, RegisterForm, InfoForm, CreateCourseForm, ApplicationForm, EditCourseForm, ExperienceForm, validGrades
 from jinja2 import Environment
-e = Environment(extensions=["jinja2.ext.do",])
+
+e = Environment(extensions=["jinja2.ext.do"])
+
+
 @app.before_first_request
 def initDB(*args, **kwargs):
     db.create_all()
@@ -225,7 +228,7 @@ def professor_delete_course(id):
     db.session.delete(course)
     db.session.commit()
 
-    return redirect('/professor/courses')
+    return redirect('/')
 
 
 @app.route('/professor/applicants/<int:course_id>', methods=['GET'])
