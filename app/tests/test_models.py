@@ -1,7 +1,7 @@
 import datetime
 import unittest
 from app import app, db
-from app.models import User, Course, Application
+from app.models import User, Course, Application, Experience
 
 
 class UserModelCase(unittest.TestCase):
@@ -24,7 +24,6 @@ class UserModelCase(unittest.TestCase):
 
         self.assertFalse(qu.check_password('not password123'))
         self.assertTrue(qu.check_password('password123'))
-
 
 class CourseModelCase(unittest.TestCase):
     def setUp(self):
@@ -77,3 +76,31 @@ class ApplicationModelCase(unittest.TestCase):
         qa = db.session.query(Application).first()
         self.assertEqual(qa.course_id, c.id)
         self.assertEqual(qa.student_id, s.id)
+
+class ExperienceModelCase(unittest.TestCase):
+    def setUp(self):
+        app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite://'
+        db.create_all()
+
+    def tearDown(self):
+        db.session.remove()
+        db.drop_all()
+    
+    def test_experience_owner(self):
+        p = User(name='Prof', is_professor=True, email='prof@wsu.edu')
+        s = User(name='Student', is_professor=False, email='student@wsu.edu')
+        db.session.add(p)
+        db.session.add(s)
+        db.session.commit()
+
+        c = Course(name='322', description='322', professor=p.id)
+        db.session.add(c)
+        db.session.commit()
+
+        e = Experience(past_ta=True,grade="A",student_id=s.id,course_id=c.id)
+        db.session.add(e)
+        db.session.commit()
+
+        qe = db.session.query(Experience).first()
+        self.assertEqual(qe.student_id,s.id)
+        self.assertEqual(qe.course_id,c.id)
